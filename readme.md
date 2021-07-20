@@ -1,10 +1,25 @@
 <div align="center">
     <img src="readme.gif">
-    <h1>typescript template</h1>
+    <h1>todo api</h1>
 </div>
 
-### What is newtstemplates/typescript?
+### Why is this a thing?
 
-newtstemplates/typescript is a basic template for one of [newtykins](https://github.com/newtykins)' TypeScript projects! You can see other templates [here](https://github.com/newtstemplates).
+newt wanted to practice typescript express api development alongside interfacing with newer technologies they have been learning that they do not have much experience with.
+
+a very cliche and overdone project, but a fun one and a good one to demonstrate skill nonetheless.
+
+a front-end may be coming eventually, who knows.
+
+### Technologies
+
+- TypeScript
+- Express.js
+- Prisma
+- PostgreSQL
+
+### Checklist
+
+- Make todos
 
 <sub>See the code's license <a href="license.md">here.</sub>
