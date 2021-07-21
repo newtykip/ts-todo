@@ -1,3 +1,10 @@
 // declare module 'name' {}
 
-// declare global {}
+export {};
+
+declare global {
+	interface TokenSet {
+		token: string;
+		refresh: string;
+	}
+}
