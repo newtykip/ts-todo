@@ -1,64 +1,71 @@
-import { CommonRoutesConfig } from '../struct/CommonRoutesConfig';
+import Routes from '../struct/Routes';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
+import winston from 'winston';
 
-export class UserRoutes extends CommonRoutesConfig {
-	constructor(app: express.Application, prisma: PrismaClient) {
-		super(app, prisma, 'UserRoutes');
+export class UserRoutes extends Routes {
+	constructor(app: express.Application, prisma: PrismaClient, logger: winston.Logger) {
+		super(app, prisma, logger, 'UserRoutes');
 	}
 
 	configureRoutes() {
+		// /register - creates a new user in the database
 		this.app.route('/register')
 			.post(async (req, res) => {
 				const { body } = req;
-				console.log(body);
+				const { username, password } = body;
 
 				// Ensure that the required paramters exist
-				if (!(body.username && body.password)) {
-					return res.status(400).send({ error: 'Data not formatted properly.' });
+				if (!(username && password)) {
+					return res.status(400).send({ error: 'Please provide both a username and a password in your request.' });
 				}
+				
+				// todo: Password requirements for security
 
 				// Generate salt and hash the password
 				const salt = await bcrypt.genSalt(10);
-				const password = await bcrypt.hash(body.password, salt);
+				const hashedPassword = await bcrypt.hash(body.password, salt);
 				
-				// Create a row in the database and return it
+				// Create the user in the database
 				const user = await this.prisma.user.create({
 					data: {
-						username: body.username,
-						password
+						username,
+						password: hashedPassword
 					}
 				});
 
-				res.status(201).send(user);
+				// Report the creation
+				const message = `User ${username} (ID: ${user.id}) has been created!`;
+
+				res.status(201).send({ message });
+				this.logger.info(message);
 			});
 
+		// /login - authenticates a user and returns a valid JSON Web Token
 		this.app.route('/login')
 			.post(async (req, res) => {
 				const { body } = req;
+				// Try to find the user in the database
 				const user = await this.prisma.user.findUnique({ where: { username: body.username }});
 
 				if (user) {
+					// Ensure that the inputted password is valid
 					const validPassword = await bcrypt.compare(body.password, user.password);
 
 					if (validPassword) {
+						// Create a JSON Web Token and respond with it
 						const token = jwt.sign({ name: user.username }, process.env.SECRET, { expiresIn: 60 * 2, algorithm: 'HS256' });
 						res.status(200).send({ '_token': token });
+						this.logger.info(`User ${user.username} (ID ${user.id}) authenticated!`)
 					} else {
-						res.status(400).send({ error: 'Invalid Password' });
+						res.status(400).send({ error: 'That password was invalid!' });
 					}
 				} else {
-					res.status(401).send({ error: 'User does not exist!' });
+					res.status(404).send({ error: 'That user does not exist!' });
 				}
 			});
-
-		this.app.route('/users')
-			.get(async (req, res) => {
-				const users = await this.prisma.user.findMany();
-				res.status(202).send({ users });
-			})
 
 		return this.app;
 	}
