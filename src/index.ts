@@ -48,10 +48,10 @@ app.use(expressWinston.logger(loggerOptions)); // Binds winston to express
 
 app.use(
 	expressJwt({
-		secret: process.env.SECRET,
+		secret: process.env.ACCESS_SECRET,
 		algorithms: ['HS256']
 	})
-	.unless({ path: ['/register', '/login', '/']})
+	.unless({ path: ['/api/register', '/api/login', '/api/token']})
 );
 
 // Simple route to ensure everything is working properly
