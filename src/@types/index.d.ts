@@ -1,10 +1,14 @@
 // declare module 'name' {}
 
+import { User } from '@prisma/client';
+
 export {};
 
 declare global {
-	interface TokenSet {
-		token: string;
-		refresh: string;
-	}
+    interface ResponseData {
+        status: number;
+        content: any;
+    }
+
+    type UserResponseData = ResponseData & { user?: User };
 }

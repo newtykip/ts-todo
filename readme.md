@@ -13,13 +13,13 @@ a front-end may be coming eventually, who knows.
 
 ### Technologies
 
-- TypeScript
-- Express.js
-- Prisma
-- PostgreSQL
+-   TypeScript
+-   Nest.js
+-   Prisma
+-   PostgreSQL
 
 ### Checklist
 
-- Make todos
+-   Make todos
 
 <sub>See the code's license <a href="license.md">here.</sub>
