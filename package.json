@@ -14,7 +14,10 @@
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-        "prisma": "prisma db pull && prisma generate"
+        "prisma": "prisma db pull && prisma generate",
+        "docs": "compodoc -p tsconfig.json",
+        "docs:serve": "compodoc -p tsconfig.json -s",
+        "docs:deploy": "npm run docs && gh-pages -d documentation && rimraf documentation"
     },
     "dependencies": {
         "@nestjs/common": "^8.0.0",
@@ -39,6 +42,7 @@
         "rxjs": "^7.2.0"
     },
     "devDependencies": {
+        "@compodoc/compodoc": "^1.1.14",
         "@nestjs/cli": "^8.0.0",
         "@nestjs/schematics": "^8.0.0",
         "@nestjs/testing": "^8.0.0",
@@ -53,11 +57,15 @@
         "eslint": "^7.30.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^3.4.0",
+        "gh-pages": "^3.2.3",
         "prettier": "^2.3.2",
         "prisma": "^2.28.0",
+        "run-script-webpack-plugin": "^0.0.11",
         "ts-loader": "^9.2.3",
         "ts-node": "^10.0.0",
         "tsconfig-paths": "^3.10.1",
-        "typescript": "^4.3.5"
+        "typescript": "^4.3.5",
+        "webpack": "^5.49.0",
+        "webpack-node-externals": "^3.0.0"
     }
 }

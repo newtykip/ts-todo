@@ -15,6 +15,7 @@ async function bootstrap() {
 
     app.use(helmet());
     app.use(cookieParser());
+    app.setGlobalPrefix('/api/v1');
 
     await app.listen(port, () => console.log(`Listening on port ${port}!`));
 }

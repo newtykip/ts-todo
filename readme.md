@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="readme.gif">
+    <img src=""> # upload to imgur
     <h1>todo api</h1>
 </div>
 
@@ -17,6 +17,7 @@ a front-end may be coming eventually, who knows.
 -   Nest.js
 -   Prisma
 -   PostgreSQL
+-   passport
 
 ### Checklist
 
