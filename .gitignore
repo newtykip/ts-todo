@@ -2,8 +2,8 @@
 /dist
 /node_modules
 
-# old files
-_src
+# private
+.env
 
 # Logs
 logs

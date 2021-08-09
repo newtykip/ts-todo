@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
@@ -44,7 +44,12 @@ export class AuthService {
         if (user) {
             // Ensure that the inputted refres token is valid
             if (refreshToken === user.refreshToken) {
-                if (moment.unix(user.refreshTokenExp).diff(moment()) < 0) {
+                console.log(
+                    moment
+                        .unix(user.refreshTokenExp)
+                        .format('DD/MM/YYYY HH:MM:SS'),
+                );
+                if (moment.unix(user.refreshTokenExp).isAfter()) {
                     const { password, ...result } = user;
                     return result;
                 }
@@ -59,12 +64,18 @@ export class AuthService {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const user = await this.prisma.user.create({
-            data: {
-                username,
-                password: hashedPassword,
-            },
-        });
+        const user = await this.prisma.user
+            .create({
+                data: {
+                    username,
+                    password: hashedPassword,
+                },
+            })
+            .catch(() => {
+                throw new BadRequestException(
+                    `An account with the username ${username} already exists!`,
+                );
+            });
 
         this.logger.log(`${this.formatUserLog(user)} registered!`);
 
@@ -86,6 +97,7 @@ export class AuthService {
 
     async getRefreshToken(userId: number): Promise<string> {
         const refreshToken = randomToken.generate(16);
+        const refreshTokenExp = moment().add(1, 'day').unix();
 
         await this.prisma.user.update({
             where: {
@@ -93,7 +105,7 @@ export class AuthService {
             },
             data: {
                 refreshToken,
-                refreshTokenExp: moment().day(1).unix(),
+                refreshTokenExp,
             },
         });
 
