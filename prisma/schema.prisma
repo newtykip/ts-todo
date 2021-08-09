@@ -8,7 +8,9 @@ datasource db {
 }
 
 model User {
-  id       Int    @unique @default(autoincrement())
-  username String @id @unique
-  password String
+  id              Int     @unique @default(autoincrement())
+  username        String  @id @unique
+  password        String
+  refreshToken    String?
+  refreshTokenExp Int?
 }
