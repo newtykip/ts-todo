@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { TodoService } from './todo.service';
 
@@ -11,5 +11,12 @@ export class TodoController {
     async listTodos(@Req() req) {
         const todos = await this.todoService.getUserTodos(req.user.id);
         return todos;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post()
+    async createTodo(@Req() req, @Body() body) {
+        const todo = await this.todoService.createTodo(req.user.id, body.todo);
+        return todo;
     }
 }

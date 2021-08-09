@@ -32,6 +32,8 @@ export class AuthService {
             if (validPassword) {
                 const { password, ...result } = user;
                 return result;
+            } else {
+                throw new BadRequestException('Wrong credentials!');
             }
         }
 
@@ -44,11 +46,6 @@ export class AuthService {
         if (user) {
             // Ensure that the inputted refres token is valid
             if (refreshToken === user.refreshToken) {
-                console.log(
-                    moment
-                        .unix(user.refreshTokenExp)
-                        .format('DD/MM/YYYY HH:MM:SS'),
-                );
                 if (moment.unix(user.refreshTokenExp).isAfter()) {
                     const { password, ...result } = user;
                     return result;
