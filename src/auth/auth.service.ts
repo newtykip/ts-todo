@@ -3,6 +3,8 @@ import { PrismaService } from 'src/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import * as randomToken from 'rand-token';
+import * as moment from 'moment';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +15,7 @@ export class AuthService {
 
     private readonly logger = new Logger();
 
-    private formatUserLog(user: User): string {
+    formatUserLog(user: User): string {
         return `User ${user.username} (ID: ${user.id})`;
     }
 
@@ -30,6 +32,22 @@ export class AuthService {
             if (validPassword) {
                 const { password, ...result } = user;
                 return result;
+            }
+        }
+
+        return null;
+    }
+
+    async validateRefreshToken(username: string, refreshToken: string) {
+        const user = await this.prisma.user.findUnique({ where: { username } });
+
+        if (user) {
+            // Ensure that the inputted refres token is valid
+            if (refreshToken === user.refreshToken) {
+                if (moment.unix(user.refreshTokenExp).diff(moment()) < 0) {
+                    const { password, ...result } = user;
+                    return result;
+                }
             }
         }
 
@@ -55,13 +73,30 @@ export class AuthService {
         return userData;
     }
 
-    async login(user: User) {
+    async getJwtToken(user: User) {
         const { password, ...payload } = user;
 
         this.logger.log(`${this.formatUserLog(user)} authenticated!`);
 
         return {
-            _access: this.jwtService.sign(payload),
+            token: this.jwtService.sign(payload),
+            user,
         };
+    }
+
+    async getRefreshToken(userId: number): Promise<string> {
+        const refreshToken = randomToken.generate(16);
+
+        await this.prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                refreshToken,
+                refreshTokenExp: moment().day(1).unix(),
+            },
+        });
+
+        return refreshToken;
     }
 }
