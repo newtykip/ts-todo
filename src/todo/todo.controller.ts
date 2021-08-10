@@ -23,6 +23,13 @@ export class TodoController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get('/:id')
+    async getTodo(@Req() req, @Param() params) {
+        const todo = await this.todoService.getTodo(req.user.id, params.id);
+        return todo;
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post()
     async createTodo(@Req() req, @Body() body) {
         const todo = await this.todoService.createTodo(req.user.id, body.todo);
@@ -36,6 +43,7 @@ export class TodoController {
             req.user.id,
             params.id,
         );
+
         return deletedTodo;
     }
 }

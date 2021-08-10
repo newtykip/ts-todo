@@ -30,12 +30,14 @@ export class AuthController {
             req.user.id,
         );
 
-        const secretData = {
-            token,
-            refreshToken,
-        };
-
-        res.cookie('auth-cookie', secretData, { httpOnly: true });
+        res.cookie(
+            'auth-cookie',
+            {
+                token,
+                refreshToken,
+            },
+            { httpOnly: true },
+        );
 
         this.authService.logger.log(
             `${this.authService.formatUserLog(user)} authenticated!`,
@@ -56,12 +58,14 @@ export class AuthController {
             req.user.id,
         );
 
-        const secretData = {
-            token,
-            refreshToken,
-        };
-
-        res.cookie('auth-cookie', secretData, { httpOnly: true });
+        res.cookie(
+            'auth-cookie',
+            {
+                token,
+                refreshToken,
+            },
+            { httpOnly: true },
+        );
 
         this.authService.logger.log(
             `${this.authService.formatUserLog(user)} re-authenticated!`,
