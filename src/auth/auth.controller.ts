@@ -37,6 +37,10 @@ export class AuthController {
 
         res.cookie('auth-cookie', secretData, { httpOnly: true });
 
+        this.authService.logger.log(
+            `${this.authService.formatUserLog(user)} authenticated!`,
+        );
+
         return {
             message: `Authenticated as ${this.authService.formatUserLog(
                 user,
@@ -58,6 +62,10 @@ export class AuthController {
         };
 
         res.cookie('auth-cookie', secretData, { httpOnly: true });
+
+        this.authService.logger.log(
+            `${this.authService.formatUserLog(user)} re-authenticated!`,
+        );
 
         return {
             message: `Reauthenticated as ${this.authService.formatUserLog(

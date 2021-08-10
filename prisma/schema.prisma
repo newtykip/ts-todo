@@ -18,6 +18,6 @@ model User {
 model Todo {
   id      Int    @unique @default(autoincrement())
   ownerId Int?
-  status  Int    @id @default(0)
   text    String
+  status  Int    @default(0)
 }

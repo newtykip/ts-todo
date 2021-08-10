@@ -13,7 +13,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
 
-    private readonly logger = new Logger();
+    readonly logger = new Logger();
 
     formatUserLog(user: User): string {
         return `User ${user.username} (ID: ${user.id})`;
@@ -83,8 +83,6 @@ export class AuthService {
 
     async getJwtToken(user: User) {
         const { password, ...payload } = user;
-
-        this.logger.log(`${this.formatUserLog(user)} authenticated!`);
 
         return {
             token: this.jwtService.sign(payload),
