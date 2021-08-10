@@ -4,6 +4,7 @@ import {
     Logger,
     UnauthorizedException,
 } from '@nestjs/common';
+import { Todo } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -16,7 +17,25 @@ export class TodoService {
         return await this.prisma.todo.findMany({ where: { ownerId: id } });
     }
 
-    async createTodo(userId: number, text: string) {
+    async getTodo(userId: number, todoId: string): Promise<Todo> {
+        const todo = await this.prisma.todo.findUnique({
+            where: { id: parseInt(todoId) },
+        });
+
+        if (!todo) {
+            throw new BadRequestException('The requested todo does not exist!');
+        }
+
+        if (todo.ownerId !== userId) {
+            throw new BadRequestException(
+                'The authenticated user does not have access to the requested todo!',
+            );
+        }
+
+        return todo;
+    }
+
+    async createTodo(userId: number, text: string): Promise<Todo> {
         // Ensure that the text was provided
         if (!text) {
             throw new BadRequestException(
@@ -42,20 +61,18 @@ export class TodoService {
         return todo;
     }
 
-    async deleteTodo(userId: number, todoId: string) {
+    async deleteTodo(userId: number, todoId: string): Promise<Todo> {
         const todo = await this.prisma.todo.findUnique({
             where: { id: parseInt(todoId) },
         });
 
         if (!todo) {
-            throw new BadRequestException(
-                `Todo with the ID ${todoId} does not exist!`,
-            );
+            throw new BadRequestException('The requested todo does not exist!');
         }
 
         if (todo.ownerId !== userId) {
             throw new UnauthorizedException(
-                `The authenticated user does not own the todo with the ID ${todoId}`,
+                'The authenticated user does not have access to the requested todo!',
             );
         }
 
