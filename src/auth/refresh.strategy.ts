@@ -13,19 +13,21 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
             secretOrKey: process.env.ACCESS_SECRET,
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (req: Request) => {
-                    const data = req?.cookies['auth-cookie'];
-                    return data ? data.token : null;
+                    const payload = req?.cookies['auth-cookie'];
+                    return payload ? payload.token : null;
                 },
             ]),
             algorithms: ['HS256'],
         });
     }
 
-    async validate(req: Request, data: any) {
-        if (data === null) {
+    async validate(req: Request, payload: any) {
+        // If there is no authenticated user, ensure that they can not refresh
+        if (payload === null) {
             throw new BadRequestException('Invalid JWT token!');
         }
 
+        // Ensure that the refresh token exists, and validate it against the DB
         let cookie = req?.cookies['auth-cookie'];
 
         if (!cookie?.refreshToken) {
@@ -33,14 +35,16 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
         }
 
         const user = await this.authService.validateRefreshToken(
-            data.username,
+            payload.username,
             cookie.refreshToken,
         );
 
+        // If the refresh token has expired, ensure that they can not refresh
         if (!user) {
             throw new BadRequestException('Refresh token has expired!');
         }
 
+        // Otherwise, continue as normal
         return user;
     }
 }
