@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="readme.gif">
+    <img src="https://i.imgur.com/4mX509V.gif">
     <h1>todo api</h1>
 </div>
 
