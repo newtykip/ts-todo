@@ -1,5 +1,5 @@
 <div align="center">
-    <img src=""> # upload to imgur
+    <img src="readme.gif">
     <h1>todo api</h1>
 </div>
 
@@ -21,6 +21,6 @@ a front-end may be coming eventually, who knows.
 
 ### Checklist
 
--   Make todos
+-   Allow users to collaborate on todos
 
 <sub>See the code's license <a href="license.md">here.</sub>
