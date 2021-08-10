@@ -20,10 +20,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
 
     async validate(payload: any) {
+        // If there is no authenticated user, ensure they can not access the endpoint
         if (payload === null) {
             throw new UnauthorizedException();
         }
 
+        // Otherwise, continue as normal
         return payload;
     }
 }
