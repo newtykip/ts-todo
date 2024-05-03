@@ -8,11 +8,11 @@ import {
     Post,
     Req,
     UseGuards,
-} from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import { TodoService } from './todo.service';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "src/auth/jwt.guard";
+import { TodoService } from "./todo.service";
 
-@Controller('todo')
+@Controller("todo")
 export class TodoController {
     constructor(private todoService: TodoService) {}
 
@@ -25,7 +25,7 @@ export class TodoController {
 
     /** GET /api/todo/:id */
     @UseGuards(JwtAuthGuard)
-    @Get('/:id')
+    @Get("/:id")
     async getTodo(@Req() req, @Param() params) {
         return await this.todoService.getTodo(req.user.id, params.id);
     }
@@ -39,14 +39,14 @@ export class TodoController {
 
     /** DELETE /api/todo/:id */
     @UseGuards(JwtAuthGuard)
-    @Delete('/:id')
+    @Delete("/:id")
     async deleteTodo(@Req() req, @Param() params) {
         return await this.todoService.deleteTodo(req.user.id, params.id);
     }
 
     /** PATCH /api/todo/:id */
     @UseGuards(JwtAuthGuard)
-    @Patch('/:id')
+    @Patch("/:id")
     async updateTodo(@Req() req, @Param() params, @Body() body) {
         return await this.todoService.updateTodo(req.user.id, params.id, {
             text: body.text,

@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from "@prisma/client";
 
 /**
  * Formats information about a user for easy logging.
@@ -14,7 +14,7 @@ export const formatUserLog = (user: User): string =>
  * @returns If the object is empty, true. Otherwise false
  */
 export const isEmpty = (o: any): boolean =>
-    Object.values(o).every((x) => x === null || x === '' || !x);
+    Object.values(o).every((x) => x === null || x === "" || !x);
 
 export enum TodoStatus {
     Todo = 1,

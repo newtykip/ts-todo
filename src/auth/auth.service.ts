@@ -1,15 +1,15 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import * as bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
-import { JwtService } from '@nestjs/jwt';
-import * as randomToken from 'rand-token';
-import * as moment from 'moment';
-import { formatUserLog } from 'src/helper';
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { PrismaService } from "src/prisma.service";
+import * as bcrypt from "bcrypt";
+import { User } from "@prisma/client";
+import { JwtService } from "@nestjs/jwt";
+import * as randomToken from "rand-token";
+import * as moment from "moment";
+import { formatUserLog } from "src/helper";
 
 type PrunedUser = Omit<
-    Omit<Omit<User, 'password'>, 'refreshToken'>,
-    'refreshTokenExp'
+    Omit<Omit<User, "password">, "refreshToken">,
+    "refreshTokenExp"
 >;
 
 @Injectable()
@@ -45,7 +45,7 @@ export class AuthService {
 
                 return result;
             } else {
-                throw new BadRequestException('Wrong credentials!');
+                throw new BadRequestException("Wrong credentials!");
             }
         }
 
@@ -142,7 +142,7 @@ export class AuthService {
     async getRefreshToken(user: User): Promise<string> {
         // Generate the token and expiry date
         const refreshToken = randomToken.generate(16);
-        const refreshTokenExp = moment().add(1, 'day').unix();
+        const refreshTokenExp = moment().add(1, "day").unix();
 
         // Add it to the database
         await this.prisma.user.update({

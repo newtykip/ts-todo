@@ -23,4 +23,4 @@ a front-end may be coming eventually, who knows.
 
 -   Allow users to collaborate on todos
 
-<sub>See the code's license <a href="license.md">here.</sub>
+<sub>this project uses the <a href="license.md">opinionated queer license v1.1</a> - tl;dr see <a href="https://oql.avris.it/license.tldr">here</a> :]</sub>

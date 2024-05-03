@@ -3,10 +3,10 @@ import {
     Injectable,
     Logger,
     UnauthorizedException,
-} from '@nestjs/common';
-import { Todo } from '@prisma/client';
-import { formatUserLog, isEmpty } from 'src/helper';
-import { PrismaService } from 'src/prisma.service';
+} from "@nestjs/common";
+import { Todo } from "@prisma/client";
+import { formatUserLog, isEmpty } from "src/helper";
+import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class TodoService {
@@ -50,13 +50,13 @@ export class TodoService {
 
         // If the todo does not exist in the database, throw an error
         if (!todo) {
-            throw new BadRequestException('The requested todo does not exist!');
+            throw new BadRequestException("The requested todo does not exist!");
         }
 
         // If the authenticated user does not have access to the found todo, throw an error
         if (todo.ownerId !== userId) {
             throw new BadRequestException(
-                'The authenticated user does not have access to the requested todo!',
+                "The authenticated user does not have access to the requested todo!",
             );
         }
 
@@ -135,7 +135,7 @@ export class TodoService {
         // Ensure that there is data to put into the todo
         if (isEmpty(newData)) {
             throw new BadRequestException(
-                'The body must contain some data to update the todo with!',
+                "The body must contain some data to update the todo with!",
             );
         }
 
